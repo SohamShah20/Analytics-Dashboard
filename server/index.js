@@ -4,6 +4,10 @@ import dotenv from "dotenv";
 import { tenantResolver } from "./middleware/tenantResolver.js";
 import { requireAuth, requireAdmin } from "./middleware/authMiddleware.js";
 import authRoutes from "./routes/auth.routes.js";
+import usageRoutes from "./routes/usage.routes.js";
+import insightsRoutes from "./routes/insights.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
+import { startInsightScheduler } from "./jobs/insightScheduler.js";
 
 dotenv.config();
 
@@ -14,6 +18,12 @@ app.use(express.json());
 app.use(tenantResolver);
 
 app.use("/auth", authRoutes);
+
+app.use("/admin", adminRoutes);
+
+app.use("/usage", usageRoutes);
+
+app.use("/insights", insightsRoutes);
 
 app.get("/", (req, res) => {
   res.json({
@@ -49,6 +59,8 @@ const PORT = process.env.PORT || 4000;
 
 const startServer = async () => {
   await connectDB();
+
+  startInsightScheduler();
 
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
