@@ -11,6 +11,8 @@ import Blog from "./pages/Blog";
 import Navbar from "./components/Navbar";
 import AdminBranding from "./components/AdminBranding";
 import { logUsage } from "./api/usage";
+import AdminTenantCreate from "./components/AdminTenantCreate";
+
 
 /**
  * Admin-only wrapper
@@ -53,10 +55,14 @@ function AppLayout() {
             path="/settings"
             element={
               <AdminOnly>
-                <AdminBranding />
+                <>
+                  <AdminBranding />
+                  <AdminTenantCreate />
+                </>
               </AdminOnly>
             }
           />
+
 
           {/* Default route */}
           <Route path="*" element={<Navigate to="/blog" replace />} />

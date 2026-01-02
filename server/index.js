@@ -12,6 +12,7 @@ import cors from "cors";
 import blogRoutes from "./routes/blog.routes.js";
 import tenantRoutes from "./routes/tenant.routes.js";
 import adminTenantRoutes from "./routes/admin.tenant.routes.js";
+import adminPlatformRoutes from "./routes/admin.platform.routes.js";
 import path from "path";
 
 dotenv.config();
@@ -35,6 +36,7 @@ app.use("/blog", blogRoutes);
 app.use("/admin", adminTenantRoutes);
 app.use("/tenant", tenantRoutes);
 app.use("/uploads", express.static(path.resolve("uploads")));
+app.use("/admin", adminPlatformRoutes);
 
 app.get("/", (req, res) => {
   res.json({
