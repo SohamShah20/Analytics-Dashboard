@@ -8,10 +8,16 @@ import usageRoutes from "./routes/usage.routes.js";
 import insightsRoutes from "./routes/insights.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import { startInsightScheduler } from "./jobs/insightScheduler.js";
+import cors from "cors";
 
 dotenv.config();
 
 const app = express();
+
+app.use(cors({
+  origin: "http://localhost:5173", // Vite dev server
+  credentials: true
+}));
 
 app.use(express.json());
 
