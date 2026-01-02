@@ -5,7 +5,7 @@ import { API_BASE } from "../api/config.js";
 
 export default function Navbar() {
   const { logout, user } = useAuth();
-  const tenant = useTenant();
+  const { tenant } = useTenant();
 
   return (
     <header

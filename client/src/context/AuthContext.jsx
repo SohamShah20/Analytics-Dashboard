@@ -36,22 +36,23 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password, tenantId) => {
-    localStorage.setItem("tenantId", tenantId);
+  // 1️⃣ Authenticate ONLY
+  localStorage.setItem("tenantId", tenantId);
 
-    const data = await apiFetch("/auth/login", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-    });
+  const data = await apiFetch("/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  });
 
-    localStorage.setItem("token", data.token);
-    setUser(decodeUser);
+  // 2️⃣ Persist auth
+  localStorage.setItem("token", data.token);
 
-    try {
-      logUsage("LOGIN_SUCCESS");
-    } catch (e) {
-      console.warn("Login analytics failed (ignored)");
-    }
-  };
+  const decodedUser = decodeUserFromToken(data.token);
+  setUser(decodedUser);
+
+  // ❌ DO NOT log usage here
+  // ❌ DO NOT fetch tenant here
+};
 
   const logout = async () => {
     logUsage("LOGOUT");
@@ -60,6 +61,8 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("tenantId");
 
     setUser(null);
+
+    window.location.href = "/login";
   };
 
   return (

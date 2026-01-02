@@ -16,10 +16,11 @@ export default function Login() {
 
     try {
       await login(email, password, tenantId);
-    } catch {
-      setError("Login failed");
+    } catch (err) {
+      setError("Invalid credentials");
     }
   };
+
 
   if (showRegister) {
     return <Register onSuccess={() => setShowRegister(false)} />;

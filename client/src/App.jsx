@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { useEffect } from "react";
 
 import { AuthProvider } from "./context/AuthContext";
 import { TenantProvider } from "./context/TenantContext";
@@ -9,6 +10,7 @@ import Insights from "./pages/Insights";
 import Blog from "./pages/Blog";
 import Navbar from "./components/Navbar";
 import AdminBranding from "./components/AdminBranding";
+import { logUsage } from "./api/usage";
 
 /**
  * Admin-only wrapper
@@ -70,17 +72,25 @@ function AppLayout() {
 function AppContent() {
   const { user } = useAuth();
 
+  useEffect(() => {
+    if (user) {
+      logUsage("LOGIN_SUCCESS");
+    }
+  }, [user]);
+
   if (!user) return <Login />;
 
-  return <AppLayout />;
+  return (
+    <TenantProvider user={user}>
+      <AppLayout />
+    </TenantProvider>
+  );
 }
 
 export default function App() {
   return (
     <AuthProvider>
-      <TenantProvider>
-        <AppContent />
-      </TenantProvider>
+      <AppContent />
     </AuthProvider>
   );
 }
