@@ -5,7 +5,10 @@ const TenantSchema = new mongoose.Schema(
     tenantId: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     logoUrl: String,
-    primaryColor: { type: String, default: "#2563eb" }
+    primaryColor: { type: String, default: "#2563eb" },
+    logoUrl: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

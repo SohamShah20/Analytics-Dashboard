@@ -1,8 +1,22 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { apiFetch } from "../api/client";
 import { logUsage } from "../api/usage";
+import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext();
+
+const decodeUserFromToken = (token) => {
+  try {
+    const decoded = jwtDecode(token);
+    return {
+      userId: decoded.userId,
+      role: decoded.role,
+      tenantId: decoded.tenantId,
+    };
+  } catch {
+    return null;
+  }
+};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -14,7 +28,8 @@ export const AuthProvider = ({ children }) => {
     const tenantId = localStorage.getItem("tenantId");
 
     if (token && tenantId) {
-      setUser({});
+      const decodedUser = decodeUserFromToken(token);
+      setUser(decodedUser);
     }
 
     setLoading(false);
@@ -29,14 +44,16 @@ export const AuthProvider = ({ children }) => {
     });
 
     localStorage.setItem("token", data.token);
-    setUser({ email });
+    setUser(decodeUser);
 
-    // 🔹 Optional but valuable
-    logUsage("LOGIN_SUCCESS");
+    try {
+      logUsage("LOGIN_SUCCESS");
+    } catch (e) {
+      console.warn("Login analytics failed (ignored)");
+    }
   };
 
   const logout = async () => {
-    // 🔹 Log usage before clearing auth
     logUsage("LOGOUT");
 
     localStorage.removeItem("token");

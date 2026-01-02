@@ -9,6 +9,10 @@ import insightsRoutes from "./routes/insights.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import { startInsightScheduler } from "./jobs/insightScheduler.js";
 import cors from "cors";
+import blogRoutes from "./routes/blog.routes.js";
+import tenantRoutes from "./routes/tenant.routes.js";
+import adminTenantRoutes from "./routes/admin.tenant.routes.js";
+import path from "path";
 
 dotenv.config();
 
@@ -24,12 +28,13 @@ app.use(express.json());
 app.use(tenantResolver);
 
 app.use("/auth", authRoutes);
-
 app.use("/admin", adminRoutes);
-
 app.use("/usage", usageRoutes);
-
 app.use("/insights", insightsRoutes);
+app.use("/blog", blogRoutes);
+app.use("/admin", adminTenantRoutes);
+app.use("/tenant", tenantRoutes);
+app.use("/uploads", express.static(path.resolve("uploads")));
 
 app.get("/", (req, res) => {
   res.json({

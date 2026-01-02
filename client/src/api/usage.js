@@ -10,6 +10,6 @@ export const logUsage = async (action, metadata = {}) => {
       }),
     });
   } catch (err) {
-    console.error("Usage log failed", err);
+    console.warn("Usage logging failed:", err.message);
   }
 };

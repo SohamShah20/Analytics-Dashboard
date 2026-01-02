@@ -4,18 +4,26 @@ export const apiFetch = async (url, options = {}) => {
   const token = localStorage.getItem("token");
   const tenantId = localStorage.getItem("tenantId");
 
+  const isAuthRoute = url.startsWith("/auth");
+
+  const headers = {
+    "Content-Type": "application/json",
+    "x-tenant-id": tenantId,
+    ...options.headers,
+  };
+
+  if (token && !isAuthRoute) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
   const res = await fetch(`${API_BASE}${url}`, {
     ...options,
-    headers: {
-      "Content-Type": "application/json",
-      "x-tenant-id": tenantId,
-      Authorization: token ? `Bearer ${token}` : "",
-      ...options.headers,
-    },
+    headers,
   });
 
   if (!res.ok) {
-    throw new Error("API error");
+    const text = await res.text();
+    throw new Error(text || "API error");
   }
 
   return res.json();

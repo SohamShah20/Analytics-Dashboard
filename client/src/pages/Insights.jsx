@@ -11,14 +11,32 @@ export default function Insights() {
   }, []);
 
   return (
-    <div>
-      <h2>Weekly Insights</h2>
-      {reports.map((r) => (
-        <div key={r._id}>
-          <p>{r.summary}</p>
-          <small>{new Date(r.generatedAt).toLocaleDateString()}</small>
-        </div>
-      ))}
-    </div>
-  );
+  <div className="card">
+    <h2>Weekly Insights</h2>
+
+    {reports.length === 0 && (
+      <p style={{ color: "#6b7280" }}>
+        No insights generated yet.
+      </p>
+    )}
+
+    {reports.map((r) => (
+      <div
+        key={r._id}
+        style={{
+          padding: "0.75rem",
+          borderLeft: "4px solid var(--primary-color)",
+          background: "#f9fafb",
+          marginBottom: "0.75rem",
+        }}
+      >
+        <p>{r.summary}</p>
+        <small style={{ color: "#6b7280" }}>
+          {new Date(r.generatedAt).toLocaleDateString()}
+        </small>
+      </div>
+    ))}
+  </div>
+);
+
 }
